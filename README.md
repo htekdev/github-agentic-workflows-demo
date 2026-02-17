@@ -29,39 +29,183 @@ GitHub Agentic Workflows allow you to define CI/CD automation in plain Markdown 
 
 This repo includes a simple Task Tracker REST API used as the codebase that the agentic workflows operate on.
 
-### Endpoints
+### API Endpoints
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET` | `/api/tasks` | List all tasks (optional `?status=` filter) |
-| `GET` | `/api/tasks/:id` | Get a single task by ID |
-| `POST` | `/api/tasks` | Create a new task |
-| `PUT` | `/api/tasks/:id` | Update an existing task |
-| `DELETE` | `/api/tasks/:id` | Delete a task |
-| `GET` | `/health` | Health check |
+#### Health Check
+`GET /health`
 
-### Task Schema
+Returns server health status.
 
-```json
+**Response** (200):
+````json
 {
-  "id": "uuid",
-  "title": "string",
-  "description": "string",
-  "status": "pending | in-progress | done",
-  "createdAt": "ISO 8601 timestamp",
-  "updatedAt": "ISO 8601 timestamp"
+  "status": "ok",
+  "timestamp": "2026-02-17T02:51:20.934Z"
 }
-```
+````
 
-### Status Filter
+---
 
-Filter tasks by status with the query parameter:
+#### List Tasks
+`GET /api/tasks`
 
-```
-GET /api/tasks?status=pending
-GET /api/tasks?status=in-progress
-GET /api/tasks?status=done
-```
+Query parameters:
+- `status` (optional): Filter by status (`pending`, `in-progress`, `done`)
+
+**Response** (200):
+````json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "title": "Build feature X",
+    "description": "Implement the new dashboard feature",
+    "status": "in-progress",
+    "createdAt": "2026-02-17T02:00:00.000Z",
+    "updatedAt": "2026-02-17T02:30:00.000Z"
+  }
+]
+````
+
+**Response** (400) - Invalid status filter:
+````json
+{
+  "error": "Invalid status filter. Must be one of: pending, in-progress, done"
+}
+````
+
+---
+
+#### Get Task by ID
+`GET /api/tasks/:id`
+
+**Response** (200):
+````json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Build feature X",
+  "description": "Implement the new dashboard feature",
+  "status": "in-progress",
+  "createdAt": "2026-02-17T02:00:00.000Z",
+  "updatedAt": "2026-02-17T02:30:00.000Z"
+}
+````
+
+**Response** (404) - Task not found:
+````json
+{
+  "error": "Task not found"
+}
+````
+
+---
+
+#### Create Task
+`POST /api/tasks`
+
+**Request body**:
+````json
+{
+  "title": "Build feature X",
+  "description": "Implement the new dashboard feature",
+  "status": "pending"
+}
+````
+
+- `title` (required): Task title (non-empty string)
+- `description` (optional): Task description
+- `status` (optional): Task status (`pending`, `in-progress`, `done`). Defaults to `pending`
+
+**Response** (201):
+````json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Build feature X",
+  "description": "Implement the new dashboard feature",
+  "status": "pending",
+  "createdAt": "2026-02-17T02:00:00.000Z",
+  "updatedAt": "2026-02-17T02:00:00.000Z"
+}
+````
+
+**Response** (400) - Missing or invalid title:
+````json
+{
+  "error": "Title is required"
+}
+````
+
+**Response** (400) - Invalid status:
+````json
+{
+  "error": "Invalid status. Must be one of: pending, in-progress, done"
+}
+````
+
+---
+
+#### Update Task
+`PUT /api/tasks/:id`
+
+**Request body**:
+````json
+{
+  "title": "Build feature X (updated)",
+  "description": "Implement the new dashboard feature with tests",
+  "status": "done"
+}
+````
+
+All fields are optional, but at least one must be provided:
+- `title` (optional): New task title
+- `description` (optional): New task description
+- `status` (optional): New task status (`pending`, `in-progress`, `done`)
+
+**Response** (200):
+````json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Build feature X (updated)",
+  "description": "Implement the new dashboard feature with tests",
+  "status": "done",
+  "createdAt": "2026-02-17T02:00:00.000Z",
+  "updatedAt": "2026-02-17T02:45:00.000Z"
+}
+````
+
+**Response** (400) - No fields provided:
+````json
+{
+  "error": "At least one field is required"
+}
+````
+
+**Response** (400) - Invalid status:
+````json
+{
+  "error": "Invalid status. Must be one of: pending, in-progress, done"
+}
+````
+
+**Response** (404) - Task not found:
+````json
+{
+  "error": "Task not found"
+}
+````
+
+---
+
+#### Delete Task
+`DELETE /api/tasks/:id`
+
+**Response** (204) - No content on success
+
+**Response** (404) - Task not found:
+````json
+{
+  "error": "Task not found"
+}
+````
 
 ## Getting Started
 
