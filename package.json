@@ -1,0 +1,31 @@
+{
+  "name": "task-tracker-api",
+  "version": "1.0.0",
+  "description": "A simple Task Tracker API to demonstrate GitHub Agentic Workflows",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/htekdev/github-agentic-workflows-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/htekdev/github-agentic-workflows-demo/issues"
+  },
+  "homepage": "https://github.com/htekdev/github-agentic-workflows-demo#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.0.18"
+  }
+}
