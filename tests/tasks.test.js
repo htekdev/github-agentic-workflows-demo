@@ -115,6 +115,25 @@ describe("POST /api/tasks", () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBeDefined();
   });
+
+  it("creates a task with emoji and Unicode characters in the title", async () => {
+    const res = await request(app)
+      .post("/api/tasks")
+      .send({ title: "Fix bug 🐛 – urgent! 日本語" });
+
+    expect(res.status).toBe(201);
+    expect(res.body.title).toBe("Fix bug 🐛 – urgent! 日本語");
+  });
+
+  it("returns 400 when the JSON body is malformed", async () => {
+    const res = await request(app)
+      .post("/api/tasks")
+      .set("Content-Type", "application/json")
+      .send('{title: "missing quotes around key"}');
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBeDefined();
+  });
 });
 
 // ---------------------------------------------------------------------------
