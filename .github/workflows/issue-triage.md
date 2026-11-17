@@ -4,8 +4,9 @@ on:
   issues:
     types: [opened]
   workflow_dispatch:
-roles: all
+  roles: all
 permissions:
+  copilot-requests: write
   contents: read
   issues: read
   pull-requests: read

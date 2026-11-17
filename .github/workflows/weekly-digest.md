@@ -1,9 +1,11 @@
 ---
 description: Generate a weekly summary of repository activity including issues, PRs, and commits
 on:
-  schedule: weekly
+  schedule:
+    - cron: "36 16 * * 0"
   workflow_dispatch:
 permissions:
+  copilot-requests: write
   contents: read
   issues: read
   pull-requests: read
